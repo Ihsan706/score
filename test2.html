@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soccer Scoreboard</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1414f4;
+        text-align: center;
+    }
+    .scoreboard {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(45deg, #d32121, #8f6100);
+        width: 70%;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 24px;
+    }
+    .team {
+        flex: 1;
+        font-weight: bold;
+    }
+    .score {
+        font-size: 28px;
+        font-weight: bold;
+        padding: 0 15px;
+    }
+    .time {
+        background: black;
+        padding: 5px 15px;
+        border-radius: 5px;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+    .button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #d32121;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .button:hover {
+        background-color: #8f6100;
+    }
+</style>
+</head>
+<body>
+    <!-- Scoreboard -->
+    <div class="scoreboard" id="table2">
+        <span class="time" id="hello"></span>
+        <div class="team" contenteditable="true">Team A</div>
+        <div class="score" contenteditable="true">
+            <h1 id="one" class="h1">0</h1> - <h1 id="two" class="h1">0</h1>
+        </div>
+        <div class="team" contenteditable="true">Team B</div>
+    </div>
+
+    <!-- Test Content Div -->
+    <div id="table" style="width: 200px; height: 200px; background-color: lightblue; color: black;">
+        <p>Test Content</p>
+    </div>
+
+    <button class="button" onclick="startCapture()">Capture Video</button>
+
+    <script>
+        // Variables for managing scores
+        var ones = 0, twos = 0, sec = 0, mint = 0;
+        const one = document.getElementById("one");
+        const two = document.getElementById("two");
+        const timeleft = document.getElementById("hello");
+
+        one.innerHTML = ones;
+        two.innerHTML = twos;
+
+        // Functions to manage score updates
+        function mone() { ones += 1; one.innerHTML = ones; }
+        function mtwo() { twos += 1; two.innerHTML = twos; }
+        function lone() { if (ones > 0) { ones -= 1; one.innerHTML = ones; } }
+        function ltwo() { if (twos > 0) { twos -= 1; two.innerHTML = twos; } }
+
+        // Timer logic
+        setInterval(() => {
+            sec += 1;
+            if (sec >= 60) { mint += 1; sec = 0; }
+            if (mint >= 5) timeleft.innerHTML = "Time is up!";
+            else timeleft.innerHTML = `${mint}:${sec < 10 ? '0' + sec : sec}`;
+        }, 1000);
+
+        // Keyboard control for scores
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowUp") mone();
+            else if (event.key === "ArrowDown") lone();
+            else if (event.key === "ArrowLeft") ltwo();
+            else if (event.key === "ArrowRight") mtwo();
+        });
+
+        // Capture the `div` as a video
+        async function captureDivToVideo(divId, duration, fps) {
+            const div = document.getElementById(divId);
+            if (!div) {
+                console.error("Div not found!");
+                return;
+            }
+
+            const frames = [];
+            const interval = 1000 / fps;
+
+            // Capture frames
+            for (let time = 0; time < duration; time += interval) {
+                const canvas = await html2canvas(div);
+                frames.push(canvas);
+            }
+
+            console.log(`Captured ${frames.length} frames`);
+
+            // Encode video with Whammy.js
+            const video = new Whammy.Video(fps);
+            frames.forEach((canvas) => video.add(canvas));
+            const output = video.compile();
+
+            // Trigger download
+            const blob = new Blob([output], { type: "video/webm" });
+            const url = URL.createObjectURL(blob);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = url;
+            downloadLink.download = "scoreboard-video.webm";
+            downloadLink.click();
+        }
+
+        // Start video capture
+        function startCapture() {
+            captureDivToVideo("table", 5000, 10); // Capture for 5 seconds at 10 FPS
+        }
+    </script>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://antimatter15.com/whammy/whammy.js"></script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+var ones = 00;
+var twos = 00;
+//
+var sec =0;
+var mint = 0;
+
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soccer Scoreboard</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background-color: #1414f4;
+text-align: center;
+}
+.scoreboard {
+display: flex;
+justify-content: center;
+align-items: center;
+background: linear-gradient(45deg, #d32121, #8f6100);
+/* this dose not work \/, but this dose /\ - Ihsan
+background: linear-gradient(to right, #d32121, #if6100);
+width: 70%;
+max-width: 800px;
+margin: 50px auto; */
+padding: 15px;
+border-radius: 10px;
+box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+color: white;
+font-size: 24px;
+    backface-visibility: hidden;
+	min-height: 50px;
+}
+.team {
+flex: 1;
+font-weight: bold;
+    backface-visibility: hidden;
+}
+.score {
+font-size: 28px;
+font-weight: bold;
+padding: 0 15px;
+    backface-visibility: hidden;
+}
+.time {
+background: black;
+padding: 5px 15px;
+border-radius: 5px;
+font-size: 20px;
+margin-right: 15px;
+    backface-visibility: hidden;
+}
+.h1 {
+	display: contents;
+	font-size: unset;
+}
+.ok {
+	    width: 70%;
+    max-width: 800px;
+    margin: 50px auto;
+}
+.back {
+	/* old back
+	    position: absolute;
+    width: 100%;
+    /* max-width: 800px; /
+    top: 0px;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+	    border-radius: 1450px;
+		*/
+		border-radius: 20px;
+    border-style: double;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    /* max-width: 800px; */
+    top: 0px;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+    height: 50px;
+    padding-block: 13.5px;
+    display: flex;
+}
+
+* {
+	    transform-style: preserve-3d;
+		perspective: 30vw;
+    transition-duration: 3s;
+    transition-timing-function: ease-in-out;
+}
+
+.ok:hover .scoreboard {
+    transform: rotateX(180deg);
+}
+.ok:hover .back {
+    transform: rotateX(360deg);
+}
+.button{
+    position: relative;
+    top: -14px;
+    width: 25%;
+    margin: 0px;
+    border-width: 10px;
+    padding: 0px;
+    height: 160%;
+    border-style: solid;
+}
+</style>
+</head>
+<body>
+<div class="scoreboard" id="table2">
+<!-- <span class="time" contenteditable="true"><h2 id="hello"></h2></span> -->
+<span class="time" contenteditable="true" id="hello" ></span>
+<div class="team" contenteditable="true">Team A</div>
+<div class="score" contenteditable="true"><h1 id="one" class="h1" >0</h1> - <h1 id="two" class="h1">0</h1></div>
+<div class="team" contenteditable="true">Team B</div>
+</div>
+<div id="table" style="width: 200px; height: 200px; background-color: lightblue; color: black;">
+    <p>Test Content</p>
+</div>
+
+<script>
+//not importent \/
+var one = document.getElementById("one");
+var two = document.getElementById("two");
+
+    one.innerHTML = ones;
+    two.innerHTML = twos;
+	
+//this is the time in seconds \/
+var times = (mint * 60)+sec;
+
+
+
+//i know i can be more effeshint on the code but this works good 
+function mone(){
+		if(sec + mint > 0){
+	    ones += 1;
+    one.innerHTML = ones;
+			console.log(ones);
+		}
+}
+function mtwo(){
+	    twos += 1;
+    two.innerHTML = twos;
+		console.log(twos);
+}
+//if it is not brocken don't fixt
+function lone(){
+		if(ones > 0){
+	    ones -= 1;
+    one.innerHTML = ones;
+		console.log(ones);
+		}
+}
+function ltwo(){
+		if(twos > 0){
+	    twos -= 1;
+    two.innerHTML = twos;
+	console.log(twos);
+		}
+}
+ 
+var timeleft = document.getElementById("hello");
+ 
+// Updates every 1000 ms aka 1 second \/
+setInterval(() => {
+sec += 01;
+
+
+
+if(sec >= 60){
+	mint += 1;
+	sec -=60 ;
+	}
+if(mint == 5){
+	say = "Time is up";
+	timeleft.innerHTML = say;
+}
+console.log(sec);
+say = mint + ":" + sec;
+timeleft.innerHTML = say;
+}, 1000); //<- here
+
+</script>
+    <script>
+        document.addEventListener("keydown", function(event) {
+            const output = document.getElementById("output");
+            if (event.key === "ArrowUp") {
+                mone()
+            } else if (event.key === "ArrowDown") {
+lone()
+            } else if (event.key === "ArrowLeft") {
+ltwo()
+            } else if (event.key === "ArrowRight") {
+mtwo()
+            }
+        });
+    </script>
+<!--	<script src="http://192.168.1.109/1/whammy-master/whammy.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://antimatter15.com/whammy/whammy.js"></script>
+
+	<script>
+	// Include html2canvas and whammy.js in your project first!
+var divId = "table";
+
+console.error
+
+/*
+console.log("Capturing div...");
+const div = document.getElementById(divId);
+if (!div) {
+    console.error("Div not found!");
+    return;
+}
+*/
+
+async function captureDivToVideo(divId, duration, fps) {
+    const div = document.getElementById(divId);
+    const frames = [];
+    const interval = 1000 / fps;
+
+    // Generate frames using html2canvas
+    for (let time = 3; time < duration; time += interval) {
+        const canvas = await html2canvas(div);
+        frames.push(canvas);
+    }
+
+    // Encode frames as a video using Whammy.js
+    const video = new Whammy.Video(fps);
+    frames.forEach((canvas) => video.add(canvas));
+    const output = video.compile();
+    
+    // Save the video
+    const blob = new Blob([output], { type: 'video/webm' });
+    const url = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = 'test.webm';
+    downloadLink.click();
+}
+
+// Example usage
+captureDivToVideo(divId, 5000, 10); // 5-second video at 30 fps
+
+	</script>
+
+</body>
+</html>
